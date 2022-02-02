@@ -1,0 +1,3 @@
+Szakálos Tamás (ROZ5JR) számítógépes grafika nagy beadandó (zászló):
+
+A zászlóm egy nagyon egyszerű objektum. Egy hengerből indultam ki, melynek levettem a méretét úgy, hogy megkapjam a rudat. Ezután beszúrtam egy plane-t, ezt picit megvastagítottam, elforgattam. Ezután mindennek adtam textúrát, végül pedig join-oltam.

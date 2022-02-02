@@ -1,0 +1,4 @@
+Szakálos Tamás (ROZ5JR) számítógépes grafika nagy beadandó (keret):
+
+Keret:
+Egy hengerból indultam ki, melynek a két alaplapját kivágtam, ezután a hengert félbevágtam és lehúztam a két szárát. Ezután az alját kiegyenesítettem és vastagságot adtam neki. Végül pedig a színét szürkésre állítottam.

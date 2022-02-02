@@ -1,0 +1,3 @@
+Szakálos Tamás (ROZ5JR) számítógépes grafika nagy beadandó (istallo):
+
+Az alap kockából indultam ki. Először is lecsökkentettem a méretét, így meglett az istálló alja. Ezután ezt feldaraboltam és felhúztam a falakat. Ezután beraktam még egy lapot, melyből az ajtót alakítottam ki. Végül pedig a tetőhöz is betettem egy kúpot, melyet méreteztem, majd a helyére illesztettem. Végül mindennek adtam textúrát, aztán pedig join-oltam.

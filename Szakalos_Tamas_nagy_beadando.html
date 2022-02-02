@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset=utf-8>
+    <title>Szakálos Tamás nagy beadandó</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { width: 100%; height: 100% }
+        #info {
+            position: absolute;
+            top: 30px;
+            left: 10px;
+            width: 60%;
+            text-align: left;
+            z-index: 100;
+            display:block;
+            color: white;
+            opacity: 1.0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="info">
+    Információk:
+    <ul>
+        <li>
+            Név: Szakálos Tamás
+        </li>
+        <li>
+            Neptun kód: ROZ5JR
+        </li>
+        <li>
+            Szak: Mérnökinformatika
+        </li>
+        <li>
+            Tanév: 2020/2021
+        </li>
+    </ul>
+</div>
+
+<script type="module">
+    import * as THREE from './js-r119/build/three.module.js';
+    import { TrackballControls } from './js-r119/examples/jsm/controls/TrackballControls.js';
+    import { OBJLoader } from './js-r119/examples/jsm/loaders/OBJLoader.js';
+    import { MTLLoader } from './js-r119/examples/jsm/loaders/MTLLoader.js';
+    import { GUI } from './js-r119/examples/jsm/libs/dat.gui.module.js';
+
+    // Globális változók
+    var WIDTH, HEIGHT, aspectRatio;
+    var renderer;
+    var scene, camera;
+    var controls;
+    var meshLoaded;
+    var keretLoaded;
+    var istalloLoaded;
+    var ctrl;
+    var faklya1Loaded;
+    var faklya2Loaded;
+    var faklya3Loaded;
+    var sLight;
+    var sLight1;
+    var sLight2;
+    var sLight3;
+    var ambientLight1;
+    var ambientLight2;
+    var clock = new THREE.Clock();
+    var zaszloLoader;
+
+    loader1();
+    // Egy képkocka rajzolása
+    //render();
+    // Animáció indítása
+    animate();
+
+    function meshController() {
+        this.positionSzeker = 0;
+        this.nappal = true;
+    }
+
+    function eltuntet() {
+        var x = document.getElementById("info");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function loader1() {
+        var OBJFile = './blender/szeker.obj';
+        var MTLFile = './blender/szeker.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+            materials.preload();
+            new OBJLoader()
+                .setMaterials(materials)
+                .load(OBJFile, function (object) {
+                    meshLoaded = object;
+                    console.log(object);
+
+                    object.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.scale.set(1, 1, 1);
+                        child.receiveShadow = true;
+                        child.castShadow = true;
+                    }
+                    });
+                    loader2();
+
+                });
+                });
+        }
+
+
+    function loader2() {
+        var OBJFile = './blender/keret.obj';
+        var MTLFile = './blender/keret.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        keretLoaded = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(2, 2, 2);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        loader3();
+                    });
+            });
+    }
+
+    function loader3() {
+        var OBJFile = './blender/istallo.obj';
+        var MTLFile = './blender/istallo.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        istalloLoaded = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(4, 4, 4);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        loader4();
+                    });
+            });
+    }
+
+    function loader4() {
+        var OBJFile = './blender/faklya.obj';
+        var MTLFile = './blender/faklya.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        faklya1Loaded = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(0.5, 0.5, 0.5);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        loader5();
+                    });
+            });
+    }
+
+    function loader5() {
+        var OBJFile = './blender/faklya.obj';
+        var MTLFile = './blender/faklya.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        faklya2Loaded = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(0.5, 0.5, 0.5);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        loader6();
+                    });
+            });
+    }
+
+    function loader6() {
+        var OBJFile = './blender/faklya.obj';
+        var MTLFile = './blender/faklya.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        faklya3Loaded = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(0.5, 0.5, 0.5);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        loader7();
+                    });
+            });
+    }
+
+    function loader7() {
+        var OBJFile = './blender/zaszlo.obj';
+        var MTLFile = './blender/zaszlo.mtl';
+
+        new MTLLoader()
+            .load(MTLFile, function (materials) {
+                materials.preload();
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .load(OBJFile, function (object) {
+                        zaszloLoader = object;
+                        console.log(object);
+
+                        object.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.scale.set(1.5, 1.5, 1.5);
+                                child.receiveShadow = true;
+                                child.castShadow = true;
+                            }
+                        });
+                        init();
+                    });
+            });
+    }
+
+    //Kezelői panel
+    function addControlGui( controlObject ) {
+        var gui = new GUI( { autoPlace: false } );
+        gui.add( controlObject, 'positionSzeker', -15, 15 ).name( 'Szekér pozíció' );
+        gui.add( controlObject, 'nappal' ).name('Nappal').onChange( function( e ) {
+            if( e ) {
+                scene.add(ambientLight1); // Nappali ambient on
+                scene.remove(ambientLight2); // Éjjeli ambient off
+                scene.add(sLight); // Nap fénye on
+                scene.remove(sLight1);
+                scene.remove(sLight2);
+                scene.remove(sLight3);
+
+            }
+            else {
+                scene.remove(sLight); // Nap fénye off
+                scene.add(sLight1);
+                scene.add(sLight2);
+                scene.add(sLight3);
+                scene.remove(ambientLight1); // Nappali ambient off
+                scene.add(ambientLight2); // Éjszakai ambient on
+            }
+        } );
+        gui.domElement.style.position = 'absolute';
+        gui.domElement.style.top = '0px';
+        gui.domElement.style.right = '0px';
+        document.body.appendChild( gui.domElement );
+    }
+
+    function init() {
+        // Böngésző ablakméret lekérése és méretarány számítása
+        HEIGHT = window.innerHeight;
+        WIDTH = window.innerWidth;
+        aspectRatio = WIDTH / HEIGHT;
+
+        // Renderer létrehozása és DOM-hoz adása
+        renderer = new THREE.WebGLRenderer( { antialias: true } );
+        renderer.setSize( WIDTH, HEIGHT );
+        renderer.setClearColor( 0x000000 );
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild( renderer.domElement );
+
+        // Színtér létrehozása
+        scene = new THREE.Scene();
+
+        // Kamera létrehozása és vetítési paramétereinek beállítása
+        camera = new THREE.PerspectiveCamera( 75, aspectRatio, 0.1, 1000 );
+        camera.position.set( 0, 20, -20 );
+        camera.lookAt( scene.position );
+
+        // Talaj
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/grass.jpg' );
+        var groundGeometry = new THREE.PlaneGeometry( 55, 55, 10 );
+        var groundMaterial = new THREE.MeshPhongMaterial( {
+            color: 0x006f00,
+            wireframe: false,
+            side: THREE.DoubleSide,
+            map: texture
+        } );
+        var groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+        groundMesh.receiveShadow = true;
+        groundMesh.castShadow = false;
+        groundMesh.position.set( 0, 0, 0 );
+        groundMesh.rotation.x = -1.0 * THREE.MathUtils.degToRad( 90 );
+        scene.add( groundMesh );
+
+        //Köves talaj
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/f_brick.jpg' );
+        var groundGeometry = new THREE.PlaneGeometry( 40, 40, 10 );
+        var groundMaterial = new THREE.MeshPhongMaterial( {
+            //color: 0xffffff,
+            wireframe: false,
+            side: THREE.DoubleSide,
+            map: texture
+        } );
+        var groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+        groundMesh.receiveShadow = true;
+        groundMesh.castShadow = false;
+        groundMesh.position.set( 0, 0.01, 0 );
+        groundMesh.rotation.x = -1.0 * THREE.MathUtils.degToRad( 90 );
+        scene.add( groundMesh );
+
+        // Objektumok létrehozása
+
+        //Nap
+        var sphereGeometry = new THREE.SphereGeometry( 8, 30, 30 );
+        var sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xF57A1B, wireframe: false } );
+        var sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+        sphereMesh.position.set( 0, 80, 80 );
+        sphereMesh.castShadow = true;
+        sphereMesh.receiveShadow = false;
+        scene.add( sphereMesh );
+
+        //Nap fénye
+        sLight = new THREE.SpotLight( 0xffffff, 5, 100, THREE.MathUtils.degToRad(50), 10 );
+        sLight.position.set( 0, 70, 70 );
+        sLight.penumbra = 1;
+        sLight.distance = 150;
+        sLight.castShadow = true;
+        sLight.shadow.mapSize.width = 2048;
+        sLight.shadow.mapSize.height = 2048;
+        scene.add( sLight );
+
+        //var spotLightHelper = new THREE.SpotLightHelper(sLight);
+        //scene.add(spotLightHelper);
+
+        //Szekér
+        meshLoaded.position.set( -14, 0.95, 15);
+        meshLoaded.rotation.y = THREE.MathUtils.degToRad( 90 );
+        scene.add( meshLoaded );
+
+        keretLoaded.position.set( 0, 5.95, -20);
+        keretLoaded.rotation.y = THREE.MathUtils.degToRad( 90 );
+        scene.add( keretLoaded );
+
+        istalloLoaded.position.set( 10, 0, 10);
+        istalloLoaded.rotation.y = THREE.MathUtils.degToRad( 180 );
+        scene.add( istalloLoaded );
+
+        zaszloLoader.position.set( 0, 4.5, 0 );
+        scene.add( zaszloLoader );
+
+        faklya1Loaded.position.set( -17, 0.48, -17);
+        scene.add( faklya1Loaded );
+        //Fáklya fénye
+        sLight1 = new THREE.SpotLight( 0xffffff, 1, 100, THREE.MathUtils.degToRad(180), 10 );
+        sLight1.position.set( -17, 2.4, -17 );
+        sLight1.penumbra = 1;
+        sLight1.distance = 150;
+        sLight1.castShadow = true;
+        sLight1.shadow.mapSize.width = 2048;
+        sLight1.shadow.mapSize.height = 2048;
+
+        faklya2Loaded.position.set( -17, 0.48, 17);
+        scene.add( faklya2Loaded );
+        //Fáklya fénye
+        sLight2 = new THREE.SpotLight( 0xffffff, 1, 100, THREE.MathUtils.degToRad(180), 10 );
+        sLight2.position.set( -17, 2.4, 17 );
+        sLight2.penumbra = 1;
+        sLight2.distance = 150;
+        sLight2.castShadow = true;
+        sLight2.shadow.mapSize.width = 2048;
+        sLight2.shadow.mapSize.height = 2048;
+
+        faklya3Loaded.position.set( 3, 0.48, -25);
+        scene.add( faklya3Loaded );
+        //Fáklya fénye
+        sLight3 = new THREE.SpotLight( 0xffffff, 1, 100, THREE.MathUtils.degToRad(180), 10 );
+        sLight3.position.set( 3, 2.5, -25 );
+        sLight3.penumbra = 1;
+        sLight3.distance = 150;
+        sLight3.castShadow = true;
+        sLight3.shadow.mapSize.width = 2048;
+        sLight3.shadow.mapSize.height = 2048;
+
+        //Vár falai
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 20, 7.5, 20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -20, 7.5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -20, 7.5, 20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 20, 7.5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 5, 7.5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -5, 7.5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 0, 7.5, 20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 20, 7.5, 0 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 15, 5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -20, 7.5, 0 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 15, 10, 2.5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 10, 5, 20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 15, 10, 2.5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -10, 5, 20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 2.5, 10, 15 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 20, 5, -10 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 2.5, 10, 15 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -20, 5, -10 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 2.5, 10, 15 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 20, 5, 10 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 2.5, 10, 15 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -20, 5, 10 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 10, 10, 2.5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( -12.5, 5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/g_brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 10, 10, 2.5 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 12.5, 5, -20 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        //Út
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( './pics/brick.jpg' );
+        var boxGeometry = new THREE.BoxGeometry( 5, 0.01, 10 );
+        var boxMaterial = new THREE.MeshPhongMaterial( { color: 0xe0e0a0, wireframe: false } );
+        boxMaterial.map = texture;
+        var boxMesh = new THREE.Mesh( boxGeometry, boxMaterial );
+        boxMesh.position.set( 0, 0, -22.5 );
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        scene.add( boxMesh );
+
+        //Fehér színű ambiens fény hozzáadása 1-es intenzitással. Ez a nappal használt.
+        ambientLight1 = new THREE.AmbientLight( 0xffffff, 1 );
+        scene.add( ambientLight1 );
+
+        //Fehér színű ambiens fény hozzáadása 0.1-es intenzitással. Ez az éjjel használt.
+        ambientLight2 = new THREE.AmbientLight( 0xffffff, 0.1 );
+
+        // Az ablak későbbi átméretezése esetén visszahívható függvény megadása
+        window.addEventListener( 'resize', handleWindowResize, false );
+
+        // Kamera vezérlés
+        controls = new TrackballControls( camera, renderer.domElement );
+        controls.rotateSpeed = 5.0;
+        controls.panSpeed = 1.0;
+
+        ctrl = new meshController();
+        addControlGui( ctrl );
+
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'i' || event.key === 'I') {
+                eltuntet();
+            }
+        });
+    }
+
+    function handleWindowResize() {
+        // Az ablak átméretezése esetén a kamera vetítési paraméterek újraszámolása
+        HEIGHT = window.innerHeight;
+        WIDTH = window.innerWidth;
+        console.log( 'WIDTH=' + WIDTH + '; HEIGHT=' + HEIGHT );
+        renderer.setSize( WIDTH, HEIGHT );
+        aspectRatio = WIDTH / HEIGHT;
+        camera.aspect = aspectRatio;
+        camera.updateProjectionMatrix();
+
+        render();
+    }
+
+    function animate() {
+        // Újabb képkocka rajzolásának kérése.
+        // Maximálisan 60 FPS-t biztosít a rendszer.
+        var delta = clock.getDelta();
+        requestAnimationFrame( animate );
+        //Szekér mozgatásának animációja
+        meshLoaded.position.z = ctrl.positionSzeker;
+        // Kameramozgás vezérlése
+        controls.update(delta);
+        // Új képkocka rajzolása
+        //Zászló forgása
+        zaszloLoader.rotation.y += -0.01;
+        render();
+    }
+
+    function render() {
+        // 3D -> 2D vetített kép kiszámítása.
+        // scene 3D színtér képe a camera kamera szemszögéből.
+        renderer.render( scene, camera );
+    }
+
+</script>
+</body>
+</html>

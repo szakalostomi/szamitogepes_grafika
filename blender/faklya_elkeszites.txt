@@ -1,0 +1,3 @@
+Szakálos Tamás (ROZ5JR) számítógépes grafika nagy beadandó (fáklya):
+
+Egy gömbből indultam ki, melyet elsőnek félbe vágtam és utána adtam neki falvastagságot. Ezután ezt feljebb emeltem és megcsináltam a fáklya szárát. Ez egy sima henger, melynek tetejét nagyobbra húztam. Majd a szárra tettem gyűrűket, melyek szintén hengerből állnak. Végül pedig az izző részt egy gömbből valósítottam meg. Mindennek adtam textúrát, majd join-oltam mindent.

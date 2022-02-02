@@ -1,0 +1,5 @@
+Szakálos Tamás (ROZ5JR) számítógépes grafika nagy beadandó (szekér):
+
+Az alap kockából indultam ki. Elsőnek a méreteket állítottam úgy, hogy kialakítsam a szekér alját. Ezután feldaraboltam és az oldalán néhány helyen betoltam. Ezután 2-2 oldalt kihúztam 1-1 "fadarabot", mely a lóhoz kötésre szolgál. Ezután kihúztam még 2-2 "fadarabot", mely a szekér lábaként szolgál. Ezután a kerék kialakítása következett.
+
+Először is a szekér alján megcsináltam a kerék tengelyét. Majd jött a kerék. Egy alap körből indultam ki, ennek adtam szélességet és vastagságot, ezután megcsináltam a belsejét, amibe megy a tengely, végül a küllőket, majd a helyére illesztettem. Aztán mindent join-oltam, hogy egy objektum legyen. A végén adtam neki textúrát, kiexportáltam és ezt illesztettem be a váram udvarára.
